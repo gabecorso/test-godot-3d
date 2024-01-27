@@ -1,4 +1,6 @@
 extends CharacterBody3D
+#emitted when player jumps on mob
+signal squashed
 
 # min mob speed in m/s
 @export var min_speed = 10
@@ -29,4 +31,8 @@ func initialize(start_position, player_position):
 
 
 func _on_visible_on_screen_notifier_3d_screen_exited():
+	queue_free()
+	
+func squash():
+	squashed.emit()
 	queue_free()

@@ -6,6 +6,13 @@ extends CharacterBody3D
 # downward acceleration in air, m/s(2)
 @export var fall_acceleration = 75
 
+#vertical impulse applied to character upon jumping, in m/s
+@export var jump_impulse = 20
+
+# vertical impulse applied to the player upon bouncing over a mob in m/s
+@export var bounce_impulse = 14
+
+
 var target_velocity = Vector3.ZERO
 
 func _physics_process(delta):
@@ -38,4 +45,28 @@ func _physics_process(delta):
 	
 	# moving the character 
 	velocity = target_velocity
+	
+	# jumping
+	if is_on_floor() and Input.is_action_just_pressed("jump"):
+		target_velocity.y = jump_impulse
+		
+	#iterate through all the collisions that occured this frame
+	for index in range(get_slide_collision_count()):
+		# get a collision with the player
+		var collision = get_slide_collision(index)
+		
+		#if the collision is with the gorund
+		if collision.get_collider() == null:
+			continue
+			
+		# if the collider is with a mob
+		if collision.get_collider().is_in_group("mob"):
+			var mob = collision.get_collider()
+			#check we are hitting above using a dot product
+			if Vector3.UP.dot(collision.get_normal()) > 0.1:
+				# squash and bounce
+				mob.squash()
+				target_velocity.y = bounce_impulse
+				# prevent duplicate calls
+				break
 	move_and_slide()
