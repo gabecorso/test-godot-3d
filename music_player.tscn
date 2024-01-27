@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://bok8qntu43tg6"]
+
+[ext_resource type="AudioStream" uid="uid://c0icnh7pvi4k4" path="res://marbleZoneLoFi.wav" id="1_tnfrw"]
+
+[node name="MusicPlayer" type="AudioStreamPlayer"]
+stream = ExtResource("1_tnfrw")
+autoplay = true

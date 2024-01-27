@@ -1,13 +1,26 @@
-[gd_scene load_steps=9 format=3 uid="uid://dy7qfvmdq20kv"]
+[gd_scene load_steps=14 format=3 uid="uid://dy7qfvmdq20kv"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_ivpol"]
 [ext_resource type="PackedScene" uid="uid://drbcb1t6y0fjn" path="res://player.tscn" id="1_krqql"]
 [ext_resource type="PackedScene" uid="uid://r32ausq1223i" path="res://mob.tscn" id="2_jmtj0"]
+[ext_resource type="FontFile" uid="uid://dx6wfq0ytbmdl" path="res://fonts/Montserrat-Medium.ttf" id="4_lkhss"]
+[ext_resource type="Script" path="res://ScoreLabel.gd" id="5_02epj"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_iflps"]
 size = Vector3(60, 2, 60)
 
+[sub_resource type="ImageTexture" id="ImageTexture_t5i8k"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vvgy2"]
+albedo_color = Color(0.552941, 1, 1, 1)
+metallic = 1.0
+metallic_texture = SubResource("ImageTexture_t5i8k")
+emission_enabled = true
+rim_enabled = true
+clearcoat_enabled = true
+
 [sub_resource type="BoxMesh" id="BoxMesh_4xrjl"]
+material = SubResource("StandardMaterial3D_vvgy2")
 size = Vector3(60, 2, 60)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i8s1u"]
@@ -22,6 +35,10 @@ _data = {
 "tilts": PackedFloat32Array(0, 0, 0, 0, 0)
 }
 point_count = 5
+
+[sub_resource type="Theme" id="Theme_omjtt"]
+default_font = ExtResource("4_lkhss")
+default_font_size = 22
 
 [node name="Main" type="Node"]
 script = ExtResource("1_ivpol")
@@ -50,6 +67,7 @@ shadow_enabled = true
 transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 6.99518, 6.248)
 projection = 1
 size = 19.0
+near = 0.092
 
 [node name="Cylinders" type="Node3D" parent="."]
 
@@ -73,11 +91,54 @@ mesh = SubResource("CylinderMesh_cl6s2")
 curve = SubResource("Curve3D_q3r7x")
 
 [node name="SpawnLocation" type="PathFollow3D" parent="SpawnPath"]
-transform = Transform3D(0.11219, 0, -0.993687, 0, 1, 0, 0.993687, 0, 0.11219, -16.9013, 0, -14.668)
+transform = Transform3D(0.112191, 0, -0.993687, 0, 1, 0, 0.993687, 0, 0.112191, -16.9013, 0, -14.668)
 
 [node name="MobTimer" type="Timer" parent="."]
 wait_time = 0.5
 autostart = true
+
+[node name="UserInterface" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScoreLabel" type="Label" parent="UserInterface"]
+layout_mode = 0
+offset_left = 18.0
+offset_top = 15.0
+offset_right = 79.0
+offset_bottom = 38.0
+theme = SubResource("Theme_omjtt")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Score: 0"
+script = ExtResource("5_02epj")
+
+[node name="Retry" type="ColorRect" parent="UserInterface"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.113725, 0.113725, 0.113725, 0.505882)
+
+[node name="retryLabel" type="Label" parent="UserInterface/Retry"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -11.5
+offset_right = 75.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Press Enter to retry"
 
 [connection signal="hit" from="Player" to="." method="_on_player_hit"]
 [connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]

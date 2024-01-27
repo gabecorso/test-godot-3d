@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://drbcb1t6y0fjn"]
+[gd_scene load_steps=8 format=3 uid="uid://drbcb1t6y0fjn"]
 
 [ext_resource type="PackedScene" uid="uid://du3idvxfhaneo" path="res://art/player.glb" id="1_1p532"]
 [ext_resource type="Script" path="res://player.gd" id="1_x4eaw"]
@@ -8,6 +8,68 @@ radius = 0.8
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_2777n"]
 height = 1.0
+
+[sub_resource type="Animation" id="Animation_locnq"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Pivot/Character:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Pivot/Character:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_capqq"]
+resource_name = "float"
+length = 1.2
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Pivot/Character:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.3, 0.7, 1.2),
+"transitions": PackedFloat32Array(0.420448, 2.14355, 1.07177),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0.65, 0), Vector3(0, 0.35, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Pivot/Character:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.1, 0.5, 1.2),
+"transitions": PackedFloat32Array(0.420448, 0.420448, 1.07177),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0.139626, 0, 0), Vector3(-0.15708, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_q03l7"]
+_data = {
+"RESET": SubResource("Animation_locnq"),
+"float": SubResource("Animation_capqq")
+}
 
 [node name="Player" type="CharacterBody3D"]
 collision_mask = 6
@@ -29,5 +91,11 @@ monitorable = false
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MobDetector"]
 transform = Transform3D(1.75394, 0, 0, 0, 0.206063, 0, 0, 0, 2.06144, 0.154855, 0.501099, -0.000154614)
 shape = SubResource("CylinderShape3D_2777n")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_q03l7")
+}
+autoplay = "float"
 
 [connection signal="body_entered" from="MobDetector" to="." method="_on_mob_detector_body_entered"]

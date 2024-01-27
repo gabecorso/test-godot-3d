@@ -33,10 +33,14 @@ func _physics_process(delta):
 		direction.z -= 1
 	
 	if direction != Vector3.ZERO:
+		
 		direction = direction.normalized() #normalize the vector to account for diagonal movement 
 		# setting the basis property will affect the rotation of the node
 		$Pivot.basis = Basis.looking_at(direction)
-	
+		
+		$AnimationPlayer.speed_scale = 2.5
+	else:
+		$AnimationPlayer.speed_scale = 1
 	#ground velocity
 	target_velocity.x = direction.x * speed
 	target_velocity.z = direction.z * speed
@@ -72,6 +76,7 @@ func _physics_process(delta):
 				# prevent duplicate calls
 				break
 	move_and_slide()
+	$Pivot.rotation.x = PI / 6 * velocity.y / jump_impulse
 
 func die():
 	hit.emit()
